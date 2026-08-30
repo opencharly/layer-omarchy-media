@@ -1,0 +1,80 @@
+omarchy-media:
+    candy:
+        version: 2026.242.0000
+        description: |
+            Omarchy's media stack — audio session, players, imaging and screen capture.
+            omarchy-media installs the client side of Omarchy's audio setup plus the
+            players, imaging tools and capture utilities its bindings and menus invoke.
+            The PipeWire server itself is not restated here: pod-pipewire owns it, and this
+            candy requires that rather than declaring a second copy. Verifiable on the
+            built image: the audio client, the players, the imaging and OCR tools and the
+            screen recorder are all on PATH.
+        require:
+            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0437'
+            # The PipeWire server. Required rather than restated, so the audio
+            # session has exactly one owner (R3).
+            - '@github.com/opencharly/pod-pipewire:v2026.239.1555'
+        distro:
+            arch:
+                package:
+                    # Audio CLIENTS only. pod-pipewire owns the server, so pipewire /
+                    # pipewire-pulse / pipewire-alsa are deliberately absent here.
+                    - wireplumber
+                    - alsa-utils
+                    # Players and editors the application menu opens.
+                    - mpv
+                    - mpv-mpris
+                    - moonlight-qt
+                    - yt-dlp
+                    - omacut
+                    - kdenlive
+                    - obs-studio
+                    # Imaging and OCR. tensaku is Omarchy-published; gtk4-layer-shell is
+                    # its overlay dependency.
+                    - imagemagick
+                    - libvips
+                    - ffmpegthumbnailer
+                    - pinta
+                    - tesseract
+                    - tesseract-data-eng
+                    - tensaku
+                    - gtk4-layer-shell
+                    - gpu-screen-recorder
+        plan:
+            - check: the media players the application menu opens are installed
+              id: omarchy-media-players
+              context:
+                - build
+              exit_status: 0
+              command: |
+                  set -eu
+                    command -v mpv >/dev/null || { echo "missing: mpv" >&2; exit 1; }
+                    command -v yt-dlp >/dev/null || { echo "missing: yt-dlp" >&2; exit 1; }
+
+            - check: the imaging and OCR tools the capture commands invoke are installed
+              id: omarchy-media-imaging
+              context:
+                - build
+              exit_status: 0
+              command: |
+                  set -eu
+                    command -v magick >/dev/null || { echo "missing: magick" >&2; exit 1; }
+                    command -v tesseract >/dev/null || { echo "missing: tesseract" >&2; exit 1; }
+
+            - check: the audio session client the shell's volume widget reads is installed
+              id: omarchy-media-audio
+              context:
+                - build
+              package:
+                package: wireplumber
+
+            - check: the screen recorder the capture bindings invoke is on PATH
+              id: omarchy-media-capture
+              context:
+                - build
+              # Asserted via `command -v` rather than a fixed path: the package installs
+              # it to /usr/sbin, which on Arch is a symlink to /usr/bin — a hardcoded
+              # /usr/bin path would encode that merge rather than the actual requirement,
+              # which is only that the bindings can resolve it.
+              exit_status: 0
+              command: sh -c 'command -v gpu-screen-recorder >/dev/null'

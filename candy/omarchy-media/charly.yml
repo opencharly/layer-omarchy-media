@@ -1,6 +1,5 @@
 omarchy-media:
     candy:
-        version: 2026.242.0000
         description: |
             Omarchy's media stack — audio session, players, imaging and screen capture.
             omarchy-media installs the client side of Omarchy's audio setup plus the
@@ -10,10 +9,10 @@ omarchy-media:
             built image: the audio client, the players, the imaging and OCR tools and the
             screen recorder are all on PATH.
         require:
-            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0437'
+            - '@github.com/opencharly/layer-omarchy-base/candy/omarchy-base:v2026.242.0701'
             # The PipeWire server. Required rather than restated, so the audio
             # session has exactly one owner (R3).
-            - '@github.com/opencharly/pod-pipewire:v2026.239.1555'
+            - '@github.com/opencharly/pod-pipewire:v2026.243.0508'
         distro:
             arch:
                 package:
@@ -47,27 +46,24 @@ omarchy-media:
                 - build
               exit_status: 0
               command: |
-                  set -eu
-                    command -v mpv >/dev/null || { echo "missing: mpv" >&2; exit 1; }
-                    command -v yt-dlp >/dev/null || { echo "missing: yt-dlp" >&2; exit 1; }
-
+                set -eu
+                  command -v mpv >/dev/null || { echo "missing: mpv" >&2; exit 1; }
+                  command -v yt-dlp >/dev/null || { echo "missing: yt-dlp" >&2; exit 1; }
             - check: the imaging and OCR tools the capture commands invoke are installed
               id: omarchy-media-imaging
               context:
                 - build
               exit_status: 0
               command: |
-                  set -eu
-                    command -v magick >/dev/null || { echo "missing: magick" >&2; exit 1; }
-                    command -v tesseract >/dev/null || { echo "missing: tesseract" >&2; exit 1; }
-
+                set -eu
+                  command -v magick >/dev/null || { echo "missing: magick" >&2; exit 1; }
+                  command -v tesseract >/dev/null || { echo "missing: tesseract" >&2; exit 1; }
             - check: the audio session client the shell's volume widget reads is installed
               id: omarchy-media-audio
               context:
                 - build
               package:
                 package: wireplumber
-
             - check: the screen recorder the capture bindings invoke is on PATH
               id: omarchy-media-capture
               context:

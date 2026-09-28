@@ -1,6 +1,5 @@
 omarchy-media:
     candy:
-        version: 2026.242.0000
         description: |
             Omarchy's media stack — audio session, players, imaging and screen capture.
             omarchy-media installs the client side of Omarchy's audio setup plus the

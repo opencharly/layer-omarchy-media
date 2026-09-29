@@ -47,8 +47,9 @@ my-omarchy-desktop:
 
 ## Related
 
-- Closest family skill: `/charly-distros:omarchy-base` — the nearest owning procedure; this
-  repo carries no `skill:` entity of its own.
+This repo carries no `skill:` entity of its own; `/charly-distros:omarchy-base` is the closest
+family owning procedure.
+
 - Audio server: `/charly-pod:pipewire`.
 - Foundation: `/charly-distros:omarchy-base`.
 - [`opencharly/opencharly](https://github.com/opencharly/opencharly) — the umbrella.
